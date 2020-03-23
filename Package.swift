@@ -7,7 +7,7 @@ let package = Package(
     products: [
         .library(
             name: "VATIdValidator",
-            targets: ["VATIdValidator"]),
+            targets: ["VATIdValidator"])
     ],
     dependencies: [],
     targets: [
@@ -16,6 +16,6 @@ let package = Package(
             dependencies: []),
         .testTarget(
             name: "VATIdValidatorTests",
-            dependencies: ["VATIdValidator"]),
+            dependencies: ["VATIdValidator"])
     ]
 )

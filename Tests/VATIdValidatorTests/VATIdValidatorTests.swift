@@ -122,7 +122,7 @@ final class VATIdValidatorTests: XCTestCase {
                 XCTFail("\(vatId) should throw error")
             } catch let error {
                 guard error as? ValidationError == ValidationError.incorrectLength else {
-                    XCTFail()
+                    XCTFail("\(vatId) should throw ValidationError.incorrectLength error")
                     
                     return
                 }
@@ -140,7 +140,7 @@ final class VATIdValidatorTests: XCTestCase {
                 XCTFail("\(vatId) should throw error")
             } catch let error {
                 guard error as? ValidationError == ValidationError.checkSumNotMatch else {
-                    XCTFail()
+                    XCTFail("\(vatId) should throw ValidationError.checkSumNotMatch error")
                     
                     return
                 }
@@ -162,7 +162,7 @@ final class VATIdValidatorTests: XCTestCase {
         ("testValidationMinistryOfFinanceVATId", testValidationMinistryOfFinanceVATId),
         ("testValidationChancelleryOfThePrimeMinisterVATId", testValidationChancelleryOfThePrimeMinisterVATId),
         ("testValidationWithIncorectLength", testValidationWithIncorectLength),
-        ("testValidationWithChceckSumNotMatch", testValidationWithChceckSumNotMatch),
+        ("testValidationWithChceckSumNotMatch", testValidationWithChceckSumNotMatch)
     ]
     
 }
