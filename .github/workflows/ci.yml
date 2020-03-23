@@ -5,10 +5,6 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ '*' ]
-    paths:
-      - '.github/workflows/swiftlint.yml'
-      - '.swiftlint.yml'
-      - '**/*.swift'
 
 jobs:
   macOS:
@@ -34,7 +30,16 @@ jobs:
     - name: Build
       run: swift build -v
     - name: Run tests
-      run: swift test -v
+      run: swift test --enable-code-coverage --enable-test-discovery
+    - name: Convert coverage files
+      run: llvm-cov export -format="lcov" .build/debug/VATIdValidatorPackageTests.xctest -instr-profile .build/debug/codecov/default.profdata > info.lcov
+    - name: Upload to codecov.io
+      uses: codecov/codecov-action@v1.0.3
+      with:
+        flags: base64,unittests
+        file: info.lcov
+        fail_ci_if_error: true 
+    
   
   SwiftLint:
     runs-on: ubuntu-latest
