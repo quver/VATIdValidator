@@ -7,3 +7,51 @@
 [![Readme Score](http://readme-score-api.herokuapp.com/score.svg?url=https://github.com/quver/vatidvalidator)](http://clayallsopp.github.io/readme-score?url=https://github.com/quver/vatidvalidator)
 
 Polish VAT Identification (NIP) number validator.
+
+## API
+### Initialisation
+
+```swift
+VATIdValidator([Int])
+VATIdValidator(BinaryInteger)
+VATIdValidator(Double)
+VATIdValidator(StringLiteralType)
+
+```
+### Validation
+```swift
+let validator = VATIdValidator(5260250274)
+try validator.validate()
+```
+### Extensions
+- BinaryInteger
+- Double
+- StringLiteralType
+
+```swift
+var isValidVATId: Bool { get }
+```
+#### Example
+
+```swift
+if 5260250274.isValidVATId {
+	// Do the magic 🎊
+}
+
+if "5260250274".isValidVATId {
+	// Other magic 🎉
+}
+```
+
+## Using
+### Swift Package Manager
+
+The [Swift Package Manager](https://swift.org/package-manager/) is dependecy manager built by Apple and integrated with Xcode and into `swift` compiler.
+
+Add to your `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "1.0.0"))
+]
+```
