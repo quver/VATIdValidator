@@ -190,11 +190,11 @@ final class VATIdValidatorTests: XCTestCase {
     }
     
     func testDoubleExtensionIsValidTrue() {
-        XCTAssertTrue("5260250274".isValidVATId)
+        XCTAssertTrue(Double(5260250274).isValidVATId)
     }
     
     func testDoubleExtensionIsValidFalse() {
-        XCTAssertFalse("4720520625".isValidVATId)
+        XCTAssertFalse(Double(4720520625).isValidVATId)
     }
     
 }
