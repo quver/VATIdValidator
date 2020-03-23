@@ -1,4 +1,4 @@
-name: CI
+name: Continuous Integrations
 
 on:
   push:
@@ -45,13 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: GitHub Action for SwiftLint
-        uses: norio-nomura/action-swiftlint@3.1.0
-      - name: GitHub Action for SwiftLint with --strict
+      - name: SwiftLint with --strict
         uses: norio-nomura/action-swiftlint@3.1.0
         with:
           args: --strict
-      - name: GitHub Action for SwiftLint (Only files changed in the PR)
-        uses: norio-nomura/action-swiftlint@3.1.0
-        env:
-          DIFF_BASE: ${{ github.base_ref }}
