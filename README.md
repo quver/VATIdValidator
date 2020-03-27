@@ -47,7 +47,7 @@ if "5260250274".isValidVATId {
 ## Using
 ### Swift Package Manager
 
-The [Swift Package Manager](https://swift.org/package-manager/) is dependecy manager built by Apple and integrated with Xcode and into `swift` compiler.
+The [Swift Package Manager](https://swift.org/package-manager/) is dependency manager built by Apple and integrated with Xcode and into `swift` compiler.
 
 Add to your `Package.swift`:
 
@@ -55,4 +55,20 @@ Add to your `Package.swift`:
 dependencies: [
     .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "1.0.0"))
 ]
+```
+
+### Cocoapods
+
+The [Cocoapods](https://cocoapods.org/) is a dependency manager for Swift and Objective-C. Supports iOS, watchOS, tvOS and macOS.
+
+Add to your `Podfile`:
+
+```
+pod 'VATIdValidator'
+```
+
+Than run:
+
+```
+pod install
 ```
