@@ -21,10 +21,16 @@ jobs:
           args: --strict
 
   test-macos:
-    name: Test · macOS (SPM)
+    name: Test · macOS (Xcode ${{ matrix.xcode }})
     runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        xcode: ["16.4", "26.3"]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Build & Test
         run: swift test --enable-code-coverage -v
       - name: Generate coverage report
@@ -37,25 +43,45 @@ jobs:
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
           files: coverage.lcov
-          flags: macos
+          flags: macos-xcode${{ matrix.xcode }}
 
   test-simulator:
-    name: Test · ${{ matrix.name }}
+    name: Test · ${{ matrix.name }} (Xcode ${{ matrix.xcode }})
     runs-on: macos-15
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: iOS
-            destination: platform=iOS Simulator,name=iPhone 16
-          - name: tvOS
-            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation)
-          - name: watchOS
-            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)
-          - name: visionOS
-            destination: platform=visionOS Simulator,name=Apple Vision Pro
+          # Xcode 16.4 — iOS 18.x / watchOS 11.x / tvOS 18.x / visionOS 2.x
+          - xcode: "16.4"
+            name: iOS
+            destination: platform=iOS Simulator,name=iPhone 16,OS=18.5
+          - xcode: "16.4"
+            name: tvOS
+            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=18.5
+          - xcode: "16.4"
+            name: watchOS
+            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=11.5
+          - xcode: "16.4"
+            name: visionOS
+            destination: platform=visionOS Simulator,name=Apple Vision Pro,OS=2.5
+          # Xcode 26.3 — iOS 26.x / watchOS 26.x / tvOS 26.x / visionOS 26.x
+          - xcode: "26.3"
+            name: iOS
+            destination: platform=iOS Simulator,name=iPhone 16,OS=26.2
+          - xcode: "26.3"
+            name: tvOS
+            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=26.2
+          - xcode: "26.3"
+            name: watchOS
+            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2
+          - xcode: "26.3"
+            name: visionOS
+            destination: platform=visionOS Simulator,name=Apple Vision Pro,OS=26.2
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Select Xcode ${{ matrix.xcode }}
+        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Test on ${{ matrix.name }} Simulator
         run: |
           xcodebuild test \
@@ -81,9 +107,11 @@ jobs:
         run: swift test --enable-code-coverage -v
       - name: Generate coverage report
         run: |
+          BIN_PATH=$(swift build --show-bin-path)
+          XCTEST=$(ls "$BIN_PATH" | grep PackageTests | head -1)
           llvm-cov export \
-            .build/debug/VATIdValidatorPackageTests \
-            -instr-profile .build/debug/codecov/default.profdata \
+            "$BIN_PATH/$XCTEST" \
+            -instr-profile "$BIN_PATH/codecov/default.profdata" \
             -format=lcov > coverage.lcov
       - name: Upload coverage
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2

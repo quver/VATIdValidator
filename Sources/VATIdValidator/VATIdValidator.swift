@@ -85,29 +85,29 @@ public struct VATIdValidator {
 
 }
 
-extension BinaryInteger {
+public extension BinaryInteger {
 
     /**
      Is valid VAT identifier.
      */
-    public var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
+    var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
 
 }
 
-extension StringLiteralType {
+public extension StringLiteralType {
 
     /**
     Is valid VAT identifier.
     */
-    public var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
+    var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
 
 }
 
-extension Double {
+public extension Double {
 
     /**
     Is valid VAT identifier.
     */
-    public var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
+    var isValidVATId: Bool { (try? VATIdValidator(self).validate()) != nil }
 
 }
