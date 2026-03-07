@@ -23,14 +23,14 @@ jobs:
   test-macos:
     name: Test · macOS (Xcode ${{ matrix.xcode }})
     runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
         xcode: ["16.4", "26.3"]
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Select Xcode ${{ matrix.xcode }}
-        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Build & Test
         run: swift test --enable-code-coverage -v
       - name: Generate coverage report
@@ -48,6 +48,8 @@ jobs:
   test-simulator:
     name: Test · ${{ matrix.name }} (Xcode ${{ matrix.xcode }})
     runs-on: macos-15
+    env:
+      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode }}.app/Contents/Developer
     strategy:
       fail-fast: false
       matrix:
@@ -58,7 +60,7 @@ jobs:
             destination: platform=iOS Simulator,name=iPhone 16,OS=18.5
           - xcode: "16.4"
             name: tvOS
-            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=18.5
+            destination: platform=tvOS Simulator,name=Apple TV,OS=18.5
           - xcode: "16.4"
             name: watchOS
             destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=11.5
@@ -71,7 +73,7 @@ jobs:
             destination: platform=iOS Simulator,name=iPhone 16,OS=26.2
           - xcode: "26.3"
             name: tvOS
-            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=26.2
+            destination: platform=tvOS Simulator,name=Apple TV,OS=26.2
           - xcode: "26.3"
             name: watchOS
             destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2
@@ -80,8 +82,6 @@ jobs:
             destination: platform=visionOS Simulator,name=Apple Vision Pro,OS=26.2
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Select Xcode ${{ matrix.xcode }}
-        run: sudo xcode-select -s /Applications/Xcode_${{ matrix.xcode }}.app
       - name: Test on ${{ matrix.name }} Simulator
         run: |
           xcodebuild test \
@@ -108,11 +108,12 @@ jobs:
       - name: Generate coverage report
         run: |
           BIN_PATH=$(swift build --show-bin-path)
-          XCTEST=$(ls "$BIN_PATH" | grep PackageTests | head -1)
           llvm-cov export \
-            "$BIN_PATH/$XCTEST" \
+            "$BIN_PATH/VATIdValidator.build/VATIdValidator.swift.o" \
             -instr-profile "$BIN_PATH/codecov/default.profdata" \
             -format=lcov > coverage.lcov
+      - name: Install curl
+        run: apt-get update -q && apt-get install -y -q curl
       - name: Upload coverage
         uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
         with:
