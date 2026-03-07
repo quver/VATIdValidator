@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: SwiftLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: norio-nomura/action-swiftlint@9f4dcd7fd46b4e75d7935cf2f4df406d5cae3684 # 3.2.1
+        with:
+          args: --strict
+
+  test-macos:
+    name: Test · macOS (SPM)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Build & Test
+        run: swift test --enable-code-coverage -v
+      - name: Generate coverage report
+        run: |
+          xcrun llvm-cov export \
+            .build/debug/VATIdValidatorPackageTests.xctest/Contents/MacOS/VATIdValidatorPackageTests \
+            -instr-profile .build/debug/codecov/default.profdata \
+            -format=lcov > coverage.lcov
+      - name: Upload coverage
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          files: coverage.lcov
+          flags: macos
+
+  test-simulator:
+    name: Test · ${{ matrix.name }}
+    runs-on: macos-15
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: iOS
+            destination: platform=iOS Simulator,name=iPhone 16
+          - name: tvOS
+            destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation)
+          - name: watchOS
+            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm)
+          - name: visionOS
+            destination: platform=visionOS Simulator,name=Apple Vision Pro
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Test on ${{ matrix.name }} Simulator
+        run: |
+          xcodebuild test \
+            -scheme VATIdValidator \
+            -destination '${{ matrix.destination }}' \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+  test-linux:
+    name: Test · Linux (Swift ${{ matrix.swift }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        swift: ["6.1", "6.2"]
+    container:
+      image: swift:${{ matrix.swift }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Build
+        run: swift build -v
+      - name: Test
+        run: swift test --enable-code-coverage -v
+      - name: Generate coverage report
+        run: |
+          llvm-cov export \
+            .build/debug/VATIdValidatorPackageTests \
+            -instr-profile .build/debug/codecov/default.profdata \
+            -format=lcov > coverage.lcov
+      - name: Upload coverage
+        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de # v5.5.2
+        with:
+          files: coverage.lcov
+          flags: linux-swift${{ matrix.swift }}

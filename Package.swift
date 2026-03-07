@@ -1,21 +1,33 @@
-// swift-tools-version:5.1
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 let package = Package(
     name: "VATIdValidator",
+    platforms: [
+        .iOS(.v13),
+        .macOS(.v10_15),
+        .tvOS(.v13),
+        .watchOS(.v7),
+        .visionOS(.v1),
+    ],
     products: [
         .library(
             name: "VATIdValidator",
-            targets: ["VATIdValidator"])
+            targets: ["VATIdValidator"]
+        ),
     ],
-    dependencies: [],
+    dependencies: [
+        .package(
+            url: "https://github.com/apple/swift-docc-plugin",
+            from: "1.3.0"
+        ),
+    ],
     targets: [
-        .target(
-            name: "VATIdValidator",
-            dependencies: []),
+        .target(name: "VATIdValidator"),
         .testTarget(
             name: "VATIdValidatorTests",
-            dependencies: ["VATIdValidator"])
+            dependencies: ["VATIdValidator"]
+        ),
     ]
 )
