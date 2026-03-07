@@ -5,29 +5,6 @@ final class VATIdValidatorTests: XCTestCase {
 
     typealias ValidationError = VATIdValidator.ValidationError
 
-    static var allTests = [
-        ("testInitWithIntArray", testInitWithIntArray),
-        ("testInitWithInt", testInitWithInt),
-        ("testInitWithInt64", testInitWithInt64),
-        ("testInitWithUInt", testInitWithUInt),
-        ("testInitWithUInt64", testInitWithUInt64),
-        ("testInitWithDouble", testInitWithDouble),
-        ("testInitWithString", testInitWithString),
-        ("testChecksumMinistryOfFinanceVATId", testChecksumMinistryOfFinanceVATId),
-        ("testChecksumChancelleryOfThePrimeMinisterVATId", testChecksumChancelleryOfThePrimeMinisterVATId),
-        ("testChecksumWithInvalidVATId", testChecksumWithInvalidVATId),
-        ("testValidationMinistryOfFinanceVATId", testValidationMinistryOfFinanceVATId),
-        ("testValidationChancelleryOfThePrimeMinisterVATId", testValidationChancelleryOfThePrimeMinisterVATId),
-        ("testValidationWithIncorectLength", testValidationWithIncorectLength),
-        ("testValidationWithChceckSumNotMatch", testValidationWithChceckSumNotMatch),
-        ("testBinaryIntegerExtensionIsValidTrue", testBinaryIntegerExtensionIsValidTrue),
-        ("testBinaryIntegerExtensionIsValidFalse", testBinaryIntegerExtensionIsValidFalse),
-        ("testStringLiteralTypeExtensionIsValidTrue", testStringLiteralTypeExtensionIsValidTrue),
-        ("testStringLiteralTypeExtensionIsValidFalse", testStringLiteralTypeExtensionIsValidFalse),
-        ("testDoubleExtensionIsValidTrue", testDoubleExtensionIsValidTrue),
-        ("testDoubleExtensionIsValidFalse", testDoubleExtensionIsValidFalse)
-    ]
-
     // VAT ID numbers:
     //
     // Valid
