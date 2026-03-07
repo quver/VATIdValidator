@@ -54,7 +54,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Xcode 16.4 — iOS 18.x / watchOS 11.x / tvOS 18.x / visionOS 2.x
+          # Xcode 16.4 — iOS 18.x / watchOS 11.x / tvOS 18.x
           - xcode: "16.4"
             name: iOS
             destination: platform=iOS Simulator,name=iPhone 16,OS=18.5
@@ -64,10 +64,7 @@ jobs:
           - xcode: "16.4"
             name: watchOS
             destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=11.5
-          - xcode: "16.4"
-            name: visionOS
-            destination: platform=visionOS Simulator,name=Apple Vision Pro,OS=2.5
-          # Xcode 26.3 — iOS 26.x / watchOS 26.x / tvOS 26.x / visionOS 26.x
+          # Xcode 26.3 — iOS 26.x / watchOS 26.x / tvOS 26.x
           - xcode: "26.3"
             name: iOS
             destination: platform=iOS Simulator,name=iPhone 16,OS=26.2
@@ -77,9 +74,6 @@ jobs:
           - xcode: "26.3"
             name: watchOS
             destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2
-          - xcode: "26.3"
-            name: visionOS
-            destination: platform=visionOS Simulator,name=Apple Vision Pro,OS=26.2
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Test on ${{ matrix.name }} Simulator
