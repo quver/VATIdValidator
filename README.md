@@ -57,18 +57,3 @@ dependencies: [
 ]
 ```
 
-### Cocoapods
-
-The [Cocoapods](https://cocoapods.org/) is a dependency manager for Swift and Objective-C. Supports iOS, watchOS, tvOS and macOS.
-
-Add to your `Podfile`:
-
-```
-pod 'VATIdValidator'
-```
-
-Than run:
-
-```
-pod install
-```
