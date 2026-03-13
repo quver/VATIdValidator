@@ -1,7 +1,8 @@
-import XCTest
+import Testing
 @testable import VATIdValidator
 
-final class VATIdValidatorTests: XCTestCase {
+@Suite
+struct VATIdValidatorTests {
 
     typealias ValidationError = VATIdValidator.ValidationError
 
@@ -27,151 +28,140 @@ final class VATIdValidatorTests: XCTestCase {
 
     // MARK: - Init
 
-    func testInitWithIntArray() {
+    @Test func initWithIntArray() {
         let validator = VATIdValidator([5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithInt() {
+    @Test func initWithInt() {
         let validator = VATIdValidator(Int(5260250274))
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithInt64() {
+    @Test func initWithInt64() {
         let validator = VATIdValidator(Int64(5260250274))
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithUInt() {
+    @Test func initWithUInt() {
         let validator = VATIdValidator(UInt(5260250274))
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithUInt64() {
+    @Test func initWithUInt64() {
         let validator = VATIdValidator(UInt64(5260250274))
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithDouble() {
+    @Test func initWithDouble() {
         let validator = VATIdValidator(Double(5260250274))
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
-    func testInitWithString() {
+    @Test func initWithString() {
         let validator = VATIdValidator("5260250274")
 
-        XCTAssertEqual(validator.vatId, [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
+        #expect(validator.vatId == [5, 2, 6, 0, 2, 5, 0, 2, 7, 4])
     }
 
     // MARK: - Check sum
 
-    func testChecksumMinistryOfFinanceVATId() {
+    @Test func checksumMinistryOfFinanceVATId() {
         let validator = VATIdValidator(5260250274)
 
-        XCTAssertEqual(validator.checkSum(), 4)
+        #expect(validator.checkSum() == 4)
     }
 
-    func testChecksumChancelleryOfThePrimeMinisterVATId() {
+    @Test func checksumChancelleryOfThePrimeMinisterVATId() {
         let validator = VATIdValidator(5261645000)
 
-        XCTAssertEqual(validator.checkSum(), 0)
+        #expect(validator.checkSum() == 0)
     }
 
-    func testChecksumWithInvalidVATId() {
-        // This test doesn't check the correctness of the checksum.
-        ["472052062",
-         "47205206251",
-         "AS4720520625",
-         "4720520625AS",
-         "4720AS520625",
-         "AS47205206",
-         "4720AS0625",
-         "47205206AS"].forEach { XCTAssertNil(VATIdValidator($0).checkSum(), "\($0) should be nil") }
+    @Test(arguments: [
+        "472052062",
+        "47205206251",
+        "AS4720520625",
+        "4720520625AS",
+        "4720AS520625",
+        "AS47205206",
+        "4720AS0625",
+        "47205206AS"
+    ])
+    func checksumWithInvalidVATId(vatId: String) {
+        #expect(VATIdValidator(vatId).checkSum() == nil)
     }
 
     // MARK: - Validation
 
-    func testValidationMinistryOfFinanceVATId() {
+    @Test func validationMinistryOfFinanceVATId() throws {
         let validator = VATIdValidator(5260250274)
 
-        XCTAssertNoThrow(try validator.validate())
+        try validator.validate()
     }
 
-    func testValidationChancelleryOfThePrimeMinisterVATId() {
+    @Test func validationChancelleryOfThePrimeMinisterVATId() throws {
         let validator = VATIdValidator(5261645000)
 
-        XCTAssertNoThrow(try validator.validate())
+        try validator.validate()
     }
 
-    func testValidationWithIncorectLength() {
-        ["47205206251",
-         "AS4720520625",
-         "4720520625AS",
-         "4720AS520625",
-         "AS47205206",
-         "4720AS0625",
-         "47205206AS"].forEach { vatId in
-            do {
-                try VATIdValidator(vatId).validate()
-                XCTFail("\(vatId) should throw error")
-            } catch let error {
-                guard error as? ValidationError == ValidationError.incorrectLength else {
-                    XCTFail("\(vatId) should throw ValidationError.incorrectLength error")
-
-                    return
-                }
-            }
+    @Test(arguments: [
+        "47205206251",
+        "AS4720520625",
+        "4720520625AS",
+        "4720AS520625",
+        "AS47205206",
+        "4720AS0625",
+        "47205206AS"
+    ])
+    func validationWithIncorrectLength(vatId: String) {
+        #expect(throws: ValidationError.incorrectLength) {
+            try VATIdValidator(vatId).validate()
         }
     }
 
-    func testValidationWithChceckSumNotMatch() {
-        ["4720520625",
-         "9329704956",
-         "9488688496",
-         "9783051521"].forEach { vatId in
-            do {
-                try VATIdValidator(vatId).validate()
-                XCTFail("\(vatId) should throw error")
-            } catch let error {
-                guard error as? ValidationError == ValidationError.checkSumNotMatch else {
-                    XCTFail("\(vatId) should throw ValidationError.checkSumNotMatch error")
-
-                    return
-                }
-            }
+    @Test(arguments: [
+        "4720520625",
+        "9329704956",
+        "9488688496",
+        "9783051521"
+    ])
+    func validationWithCheckSumNotMatch(vatId: String) {
+        #expect(throws: ValidationError.checkSumNotMatch) {
+            try VATIdValidator(vatId).validate()
         }
     }
 
     // MARK: - Extensions
 
-    func testBinaryIntegerExtensionIsValidTrue() {
-        XCTAssertTrue(5260250274.isValidVATId)
+    @Test func binaryIntegerExtensionIsValidTrue() {
+        #expect(5260250274.isValidVATId)
     }
 
-    func testBinaryIntegerExtensionIsValidFalse() {
-        XCTAssertFalse(4720520625.isValidVATId)
+    @Test func binaryIntegerExtensionIsValidFalse() {
+        #expect(!4720520625.isValidVATId)
     }
 
-    func testStringLiteralTypeExtensionIsValidTrue() {
-        XCTAssertTrue("5260250274".isValidVATId)
+    @Test func stringLiteralTypeExtensionIsValidTrue() {
+        #expect("5260250274".isValidVATId)
     }
 
-    func testStringLiteralTypeExtensionIsValidFalse() {
-        XCTAssertFalse("4720520625".isValidVATId)
+    @Test func stringLiteralTypeExtensionIsValidFalse() {
+        #expect(!"4720520625".isValidVATId)
     }
 
-    func testDoubleExtensionIsValidTrue() {
-        XCTAssertTrue(Double(5260250274).isValidVATId)
+    @Test func doubleExtensionIsValidTrue() {
+        #expect(Double(5260250274).isValidVATId)
     }
 
-    func testDoubleExtensionIsValidFalse() {
-        XCTAssertFalse(Double(4720520625).isValidVATId)
+    @Test func doubleExtensionIsValidFalse() {
+        #expect(!Double(4720520625).isValidVATId)
     }
-
 }
