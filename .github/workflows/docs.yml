@@ -16,6 +16,9 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   build:
     name: Build Documentation
@@ -30,6 +33,7 @@ jobs:
             generate-documentation \
             --target VATIdValidator \
             --output-path ./docs \
+            --disable-indexing \
             --transform-for-static-hosting \
             --hosting-base-path VATIdValidator
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
