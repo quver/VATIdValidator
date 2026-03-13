@@ -4,11 +4,14 @@
 [![GitHub license](https://img.shields.io/github/license/quver/VATIdValidator.svg)]()
 [![Swift Package Manager compatible](https://img.shields.io/badge/SPM-compatible-brightgreen.svg)](https://swift.org/package-manager)
 [![codebeat badge](https://codebeat.co/badges/a96882e8-2953-4453-8734-cbc6edb9c16c)](https://codebeat.co/projects/github-com-quver-vatidvalidator-master)
-[![codecov](https://codecov.io/gh/quver/VATIdValidator/branch/master/graph/badge.svg)](https://codecov.io/gh/quver/VATIdValidator)
-[![Readme Score](http://readme-score-api.herokuapp.com/score.svg?url=https://github.com/quver/vatidvalidator)](http://clayallsopp.github.io/readme-score?url=https://github.com/quver/vatidvalidator)
-[![Documentation](https://quver.github.io/VATIdValidator/badge.svg)](https://quver.github.io/VATIdValidator/index.html)
+[![codecov](https://codecov.io/gh/quver/VATIdValidator/branch/main/graph/badge.svg)](https://codecov.io/gh/quver/VATIdValidator)
 
 Polish VAT Identification (NIP) number validator.
+
+## Requirements
+- iOS 13+ / macOS 10.15+ / tvOS 13+ / watchOS 7+
+- Swift 6.1+
+- Xcode 16.4+
 
 ## API
 ### Initialisation
@@ -17,7 +20,7 @@ Polish VAT Identification (NIP) number validator.
 VATIdValidator([Int])
 VATIdValidator(BinaryInteger)
 VATIdValidator(Double)
-VATIdValidator(StringLiteralType)
+VATIdValidator(String)
 ```
 ### Validation
 ```swift
@@ -27,7 +30,7 @@ try validator.validate()
 ### Extensions
 - BinaryInteger
 - Double
-- StringLiteralType
+- String
 
 ```swift
 var isValidVATId: Bool { get }
@@ -53,7 +56,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "2.0.0"))
 ]
 ```
 
