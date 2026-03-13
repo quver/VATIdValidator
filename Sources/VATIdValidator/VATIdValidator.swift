@@ -2,8 +2,9 @@ public struct VATIdValidator {
 
     /**
      ## Possible validation errors.
-     
+
       - `incorrectLength` - The VAT identifier should have 10 digits.
+      - `invalidDigit` - Each element must be a single digit (0–9).
       - `checkSumNotMatch` - Checksum should be equal 10th digit of the VAT Identifier.
      */
     public enum ValidationError: Error {
@@ -11,13 +12,15 @@ public struct VATIdValidator {
         /// The VAT Identifier should have 10 digits.
         case incorrectLength
 
+        /// Each element must be a single digit (0–9).
+        case invalidDigit
+
         /// Checksum should be equal 10th digit of the VAT ID.
         case checkSumNotMatch
 
     }
 
-    let vatId: [Int?]
-    private let filteredVATId: [Int]
+    private let digits: [Int]
     private let vatIdLength = 10
 
     /**
@@ -25,8 +28,7 @@ public struct VATIdValidator {
      - Parameter vatId: The VAT identifier as array of integers.
      */
     public init(_ vatId: [Int]) {
-        self.vatId = vatId
-        self.filteredVATId = vatId.compactMap { $0 }
+        self.digits = vatId
     }
 
     /**
@@ -49,9 +51,8 @@ public struct VATIdValidator {
      Common constructor.
      - Parameter vatId: The VAT identifier as string.
      */
-    public init(_ vatId: StringLiteralType) {
-        self.vatId = vatId.map { Int(String($0)) }
-        filteredVATId = self.vatId.compactMap { $0 }
+    public init(_ vatId: String) {
+        self.digits = vatId.compactMap { $0.wholeNumberValue }
     }
 
     /**
@@ -62,25 +63,25 @@ public struct VATIdValidator {
      */
     public func validate() throws {
         // The VAT identifier should have 10 digits.
-        guard vatId.count == vatIdLength
-            && filteredVATId.count == vatIdLength else { throw ValidationError.incorrectLength }
+        guard digits.count == vatIdLength else { throw ValidationError.incorrectLength }
+
+        // Each digit must be in range 0–9.
+        guard digits.allSatisfy({ (0...9).contains($0) }) else { throw ValidationError.invalidDigit }
 
         // Checksum should be equal 10th digit of the VAT identifier.
-        guard checkSum() == vatId[9] else { throw ValidationError.checkSumNotMatch }
+        guard checkSum() == digits[9] else { throw ValidationError.checkSumNotMatch }
     }
 
-    func checkSum() -> Int? {
-        guard vatId.count == vatIdLength && filteredVATId.count == vatIdLength else { return nil }
-
-        return (6 * filteredVATId[0] +
-            5 * filteredVATId[1] +
-            7 * filteredVATId[2] +
-            2 * filteredVATId[3] +
-            3 * filteredVATId[4] +
-            4 * filteredVATId[5] +
-            5 * filteredVATId[6] +
-            6 * filteredVATId[7] +
-            7 * filteredVATId[8]) % 11
+    private func checkSum() -> Int {
+        return (6 * digits[0] +
+            5 * digits[1] +
+            7 * digits[2] +
+            2 * digits[3] +
+            3 * digits[4] +
+            4 * digits[5] +
+            5 * digits[6] +
+            6 * digits[7] +
+            7 * digits[8]) % 11
     }
 
 }
@@ -94,7 +95,7 @@ public extension BinaryInteger {
 
 }
 
-public extension StringLiteralType {
+public extension String {
 
     /**
     Is valid VAT identifier.
