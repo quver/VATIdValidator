@@ -56,7 +56,7 @@ Add to your `Package.swift`:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/quver/VATIdValidator.git", .upToNextMajor(from: "2.0.0"))
 ]
 ```
 
