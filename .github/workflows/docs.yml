@@ -35,18 +35,9 @@ jobs:
             --output-path ./docs \
             --transform-for-static-hosting \
             --hosting-base-path VATIdValidator
-      - name: Fix case sensitivity for GitHub Pages
+      - name: Add root redirect
         run: |
-          TARGET=VATIdValidator
-          TARGET_LOWER=$(echo "$TARGET" | tr '[:upper:]' '[:lower:]')
-          if [ "$TARGET" != "$TARGET_LOWER" ]; then
-            cp -r "./docs/documentation/$TARGET_LOWER" "./docs/documentation/$TARGET" 2>/dev/null || true
-            mkdir -p "./docs/data/documentation"
-            cp "./docs/data/documentation/$TARGET_LOWER.json" "./docs/data/documentation/$TARGET.json" 2>/dev/null || true
-            if [ -d "./docs/data/documentation/$TARGET_LOWER" ]; then
-              cp -r "./docs/data/documentation/$TARGET_LOWER" "./docs/data/documentation/$TARGET" 2>/dev/null || true
-            fi
-          fi
+          echo '<html><head><meta http-equiv="refresh" content="0; url=/VATIdValidator/documentation/vatidvalidator/"></head></html>' > ./docs/index.html
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: ./docs
