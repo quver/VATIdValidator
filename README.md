@@ -10,7 +10,7 @@ Polish VAT Identification (NIP) number validator.
 
 ## Requirements
 
-- iOS 13+ / macOS 10.15+ / tvOS 13+ / watchOS 7+
+- iOS 13+ / macOS 10.15+ / tvOS 13+
 - Swift 6.1+
 - Xcode 16.4+
 
@@ -62,6 +62,10 @@ VATIdValidator(5260250274)                         // BinaryInteger
 VATIdValidator(5260250274.0)                       // Double
 VATIdValidator("5260250274")                       // String
 ```
+
+For numeric inputs (`BinaryInteger`, `Double`), negative numbers and non-finite or out-of-range `Double` values (`.nan`, `.infinity`, values outside the `Int` range) are treated as invalid input rather than a valid or crashing VAT ID. A fractional `Double` is truncated toward zero before validation, so `5260250274.7` validates the same as `5260250274`.
+
+For `String` inputs, all non-digit characters — dashes, spaces, letters, including a leading `-` — are ignored as formatting separators, and validation runs on the remaining digits (so `"526-025-02-74"` is valid).
 
 ## Documentation
 
