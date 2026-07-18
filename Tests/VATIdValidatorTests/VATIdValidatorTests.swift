@@ -126,6 +126,37 @@ struct VATIdValidatorTests {
         }
     }
 
+    // MARK: - Edge cases
+
+    @Test(arguments: [
+        -5260250274,
+        -1
+    ])
+    func validationWithNegativeInteger(vatId: Int) {
+        #expect(throws: ValidationError.incorrectLength) {
+            try VATIdValidator(vatId).validate()
+        }
+    }
+
+    @Test func validationWithNegativeInt64() {
+        #expect(throws: ValidationError.incorrectLength) {
+            try VATIdValidator(Int64(-5260250274)).validate()
+        }
+    }
+
+    @Test(arguments: [
+        Double.nan,
+        Double.infinity,
+        -Double.infinity,
+        1e20,
+        -5260250274.0
+    ])
+    func validationWithNonFiniteOrOutOfRangeOrNegativeDouble(vatId: Double) {
+        #expect(throws: ValidationError.incorrectLength) {
+            try VATIdValidator(vatId).validate()
+        }
+    }
+
     // MARK: - Extensions
 
     @Test func binaryIntegerExtensionIsValidTrue() {
@@ -150,5 +181,17 @@ struct VATIdValidatorTests {
 
     @Test func doubleExtensionIsValidFalse() {
         #expect(!Double(4720520625).isValidVATId)
+    }
+
+    @Test func binaryIntegerExtensionIsValidFalseForNegative() {
+        #expect(!(-5260250274).isValidVATId)
+    }
+
+    @Test func doubleExtensionIsValidFalseForNaN() {
+        #expect(!Double.nan.isValidVATId)
+    }
+
+    @Test func doubleExtensionIsValidFalseForInfinity() {
+        #expect(!Double.infinity.isValidVATId)
     }
 }

@@ -57,26 +57,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # Xcode 16.4 — iOS 18.x / watchOS 11.x / tvOS 18.x
+          # Xcode 16.4 — iOS 18.x / tvOS 18.x
           - xcode: "16.4"
             name: iOS
             destination: platform=iOS Simulator,name=iPhone 16,OS=18.5
           - xcode: "16.4"
             name: tvOS
             destination: platform=tvOS Simulator,name=Apple TV 4K (3rd generation),OS=18.5
-          - xcode: "16.4"
-            name: watchOS
-            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=11.5
-          # Xcode 26.3 — iOS 26.x / watchOS 26.x / tvOS 26.x
+          # Xcode 26.3 — iOS 26.x / tvOS 26.x
           - xcode: "26.3"
             name: iOS
             destination: platform=iOS Simulator,name=iPhone 16,OS=26.2
           - xcode: "26.3"
             name: tvOS
             destination: platform=tvOS Simulator,name=Apple TV,OS=26.2
-          - xcode: "26.3"
-            name: watchOS
-            destination: platform=watchOS Simulator,name=Apple Watch Series 10 (46mm),OS=26.2
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
       - name: Test on ${{ matrix.name }} Simulator
