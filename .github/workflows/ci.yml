@@ -43,7 +43,7 @@ jobs:
             -instr-profile .build/debug/codecov/default.profdata \
             -format=lcov > coverage.lcov
       - name: Upload coverage
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: coverage.lcov
           flags: macos-xcode${{ matrix.xcode }}
@@ -106,7 +106,7 @@ jobs:
       - name: Install curl
         run: apt-get update -q && apt-get install -y -q curl
       - name: Upload coverage
-        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
+        uses: codecov/codecov-action@303a32d7a59b442fa8d48b6a1cc6825c09c847a5 # v7.1.1
         with:
           files: coverage.lcov
           flags: linux-swift${{ matrix.swift }}
